@@ -75,6 +75,21 @@ async def check_delete_project_closed(
     return charity_project
 
 
+async def check_update_project_closed(
+        project_id: int,
+        session: AsyncSession,
+):
+    charity_project = await charity_project_crud.get(
+        object_id=project_id, session=session
+    )
+    if charity_project.fully_invested is True:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail='Закрытый проект нельзя редактировать!'
+        )
+    return charity_project
+
+
 async def check_update_project_invested(
         project,
         new_full_amount,

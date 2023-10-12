@@ -1,6 +1,7 @@
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from typing import Optional
 
 from app.models import CharityProject, Donation, User
@@ -15,13 +16,16 @@ class CRUDBase:
             self,
             object_id: int,
             session: AsyncSession,
+
     ):
+
         db_object = await session.execute(
             select(self.model).where(
                 self.model.id == object_id
             )
         )
         return db_object.scalars().first()
+        # return db_object.fetchall()
 
     async def get_multi(
             self,
@@ -29,24 +33,19 @@ class CRUDBase:
     ):
         db_objects = await session.execute(select(self.model))
         return db_objects.scalars().all()
+        # return db_objects.fetchall()
 
     async def create(
             self,
-            obj_in,
+            object_in,
             session: AsyncSession,
-            user: Optional[User] = None
     ):
-        obj_in_data = obj_in.dict()
-
-        if user is not None:
-            obj_in_data['user_id'] = user.id
-        db_obj = self.model(**obj_in_data)
-        session.add(db_obj)
-
+        object_in_data = object_in.dict()
+        db_object = self.model(**object_in_data)
+        session.add(db_object)
         await session.commit()
-        await session.refresh(db_obj)
-
-        return db_obj
+        await session.refresh(db_object)
+        return db_object
 
     async def update(
             self,

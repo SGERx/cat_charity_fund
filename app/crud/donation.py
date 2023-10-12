@@ -9,11 +9,11 @@ class CRUDDonation(CRUDBase):
 
     async def create(
             self,
-            obj_in,
+            object_in,
             user: User,
             session: AsyncSession,
     ):
-        object_in_data = obj_in.dict()
+        object_in_data = object_in.dict()
         db_object = self.model(**object_in_data)
         session.add(db_object)
         await session.commit()

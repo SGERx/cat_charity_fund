@@ -1,6 +1,6 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-
+from typing import Optional
 from app.crud.base import CRUDBase
 from app.models.charity_project import CharityProject
 
@@ -11,13 +11,13 @@ class CRUDCharityProject(CRUDBase):
             self,
             project_name: str,
             session: AsyncSession,
-    ):
+    ) -> Optional[int]:
         db_project_id = await session.execute(
             select(CharityProject.id).where(
                 CharityProject.name == project_name
             )
         )
-        db_project_id = db_project_id.scalar()
+        db_project_id = db_project_id.scalar() if db_project_id is not None else None
         return db_project_id
 
     async def get_not_used(
