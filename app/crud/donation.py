@@ -1,8 +1,8 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import Optional
+
 from app.crud.base import CRUDBase
-from app.models import CharityProject, Donation, User
+from app.models import Donation, User
 
 
 class CRUDDonation(CRUDBase):
