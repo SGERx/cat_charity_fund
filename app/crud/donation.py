@@ -10,8 +10,8 @@ class CRUDDonation(CRUDBase):
     async def create(
             self,
             obj_in,
+            user: User,
             session: AsyncSession,
-            user: Optional[User] = None,
     ):
         object_in_data = obj_in.dict()
         db_object = self.model(**object_in_data)

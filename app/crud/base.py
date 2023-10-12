@@ -16,27 +16,19 @@ class CRUDBase:
             object_id: int,
             session: AsyncSession,
     ):
-        db_obj = await session.execute(
+        db_object = await session.execute(
             select(self.model).where(
                 self.model.id == object_id
             )
         )
-        return db_obj.scalars().first()
+        return db_object.scalars().first()
 
     async def get_multi(
             self,
             session: AsyncSession,
     ):
-        db_objs = await session.execute(select(self.model))
-        return db_objs.scalars().all()
-
-    async def get_not_closed_objects(
-            self,
-            session: AsyncSession
-    ):
-        not_closed_obj = await session.execute(select(self.model).where(
-            self.model.fully_invested.is_(False)).order_by(self.model.create_date))
-        return not_closed_obj
+        db_objects = await session.execute(select(self.model))
+        return db_objects.scalars().all()
 
     async def create(
             self,
