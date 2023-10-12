@@ -45,21 +45,6 @@ async def check_charity_project_exists(
     return charity_project
 
 
-async def check_delete_project_invested(
-        project_id: int,
-        session: AsyncSession,
-) -> CharityProject:
-    charity_project = await charity_project_crud.get(
-        object_id=project_id, session=session
-    )
-    if charity_project.invested_amount > 0:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail='В проект были внесены средства, не подлежит удалению!'
-        )
-    return charity_project
-
-
 async def check_delete_project_closed(
         project_id: int,
         session: AsyncSession,
@@ -71,6 +56,21 @@ async def check_delete_project_closed(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail='Закрытый проект нельзя редактировать!'
+        )
+    return charity_project
+
+
+async def check_delete_project_invested(
+        project_id: int,
+        session: AsyncSession,
+) -> CharityProject:
+    charity_project = await charity_project_crud.get(
+        object_id=project_id, session=session
+    )
+    if charity_project.invested_amount > 0 and charity_project.fully_invested is False:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail='В проект были внесены средства, не подлежит удалению!'
         )
     return charity_project
 
@@ -102,3 +102,27 @@ async def check_update_project_invested(
                        'устанавливать требуемую сумму меньше внесённой.'
             )
     return project
+
+
+async def check_charity_project_before_delete(
+        project_id: int,
+        session: AsyncSession
+) -> CharityProject:
+    """Проверить проект перед удалением."""
+    charity_project = await check_charity_project_exists(
+        project_id=project_id,
+        session=session
+    )
+
+    if charity_project.invested_amount > 0:
+        raise HTTPException(
+            status_code=400,
+            detail='В проект были внесены средства, не подлежит удалению!'
+        )
+    if charity_project.fully_invested:
+        raise HTTPException(
+            status_code=400,
+            detail='Закрытый проект нельзя редактировать!'
+        )
+
+    return charity_project

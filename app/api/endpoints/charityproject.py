@@ -3,9 +3,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.validators import (
     check_charity_project_exists, check_info_none,
-    check_delete_project_invested, check_delete_project_closed,
     check_name_duplicate, check_update_project_closed,
-    check_update_project_invested
+    check_update_project_invested, check_charity_project_before_delete
 )
 from app.core.db import get_async_session
 from app.core.user import current_superuser
@@ -84,8 +83,12 @@ async def remove_charity_project(
     project_id: int,
     session: AsyncSession = Depends(get_async_session),
 ):
-    await check_delete_project_closed(project_id, session)
-    await check_delete_project_invested(project_id, session)
+    # await check_delete_project_closed(project_id, session)
+    # await check_delete_project_invested(project_id, session)
+    charity_project = await check_charity_project_before_delete(
+        project_id=project_id,
+        session=session
+    )
     charity_project = await check_charity_project_exists(
         project_id, session
     )
