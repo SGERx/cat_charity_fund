@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from app.api.routers import main_router
+from app.api.routers import main_router_v1
 from app.core.config import settings
 from app.core.init_db import create_first_superuser
 
@@ -10,7 +10,7 @@ app = FastAPI(
 )
 
 
-app.include_router(main_router)
+app.include_router(main_router_v1)
 
 
 @app.on_event('startup')

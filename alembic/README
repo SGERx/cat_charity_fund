@@ -1,1 +1,19 @@
-Generic single-database configuration.
+## Generic single-database configuration.
+
+# Инициация проекта
+alembic init alembic
+
+# Автогенерация миграций
+alembic revision --autogenerate -m "First migration"
+
+# Применение миграции
+alembic upgrade head
+
+# Отмена миграции (на одну ревизию)
+alembic downgrade head -1
+
+# История миграций
+alembic history
+
+# Отмена миграции до определеной версии (по истории)
+alembic downgrade <migration_identifier>

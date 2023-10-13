@@ -23,7 +23,6 @@ class CRUDBase:
             )
         )
         return db_object.scalars().first()
-        # return db_object.fetchall()
 
     async def get_multi(
             self,
@@ -31,7 +30,6 @@ class CRUDBase:
     ):
         db_objects = await session.execute(select(self.model))
         return db_objects.scalars().all()
-        # return db_objects.fetchall()
 
     async def create(
             self,
