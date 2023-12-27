@@ -9,7 +9,7 @@
 
 # Установка и запуск
 
-Клонировать репозиторй 
+Клонировать репозиторий 
 
 git clone git@github.com:SGERx/cat_charity_fund.git
 
