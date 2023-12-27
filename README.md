@@ -56,8 +56,6 @@ alembic revision --autogenerate -m "First migration"
 
 alembic upgrade head
 
-Запуск проекта:
-
 # Запуск приложения через uvicorn
 
 uvicorn app.main:app --reload
